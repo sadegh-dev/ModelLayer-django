@@ -6,6 +6,7 @@
     <form action='' method='POST' novalidate>
         {% csrf_token %}
         {{ form.as_p }}
+        <label for='{{ form.username.id_for_label }}' >Username</label>
         <input type='submit' value='Register' class='btn btn-primary' >
     </form>
 {% endblock %}
