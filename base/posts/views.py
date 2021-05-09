@@ -1,9 +1,12 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404 , redirect
 from .models import Post
 from django.contrib.auth.models import User
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from .forms import AddPostForm
+from django.utils.text import slugify
+
+
 
 
 def all_posts(request):
@@ -28,25 +31,17 @@ def post_detail(request, year, month, day, slug):
 @login_required
 def add_post(request):
     if request.method == 'POST':
-        pass
+        form = AddPostForm(request.POST)
+        if form.is_valid():
+            new_post = form.save(commit=False)
+            new_post.user = request.user
+            new_post.slug = slugify(form.cleaned_data['body'][:30])
+            new_post.save()
+            messages.success(request, 'your post submitted', 'success')
+            return redirect('usermanage:dashboard', request.user.id)
     else :
         form = AddPostForm()
     context = {
-        'form' : form
+        'form' : form ,
     }
     return render(request, 'posts/add_post.html', context) 
-
-
-
-"""
-        form = AddPostForm(request.POST)
-        if form.is_valid() :
-            cd = form.cleaned_data
-            user = authenticate(request, username=cd['username'], password=cd['password'])
-            if user is not None :
-                login(request, user)
-                messages.success(request, 'you logged in successfully', 'success')
-                return redirect('posts:all_posts')
-            else :
-                messages.error(request, 'wrong username or password', 'error')   
-    """
