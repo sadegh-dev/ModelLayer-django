@@ -1,4 +1,4 @@
-from django.shortcuts import render , redirect
+from django.shortcuts import render , redirect, get_object_or_404
 from .forms import UserLoginForm, UserRegistrationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -23,7 +23,7 @@ def user_login(request):
     context = {
         'form' : form
     }
-    return render(request, 'account/login.html', context)
+    return render(request, 'usermanage/login.html', context)
 
 
 def user_register(request):
@@ -40,7 +40,7 @@ def user_register(request):
     context = {
         'form' : form
     }
-    return render(request, 'account/register.html', context)
+    return render(request, 'usermanage/register.html', context)
 
 
 
@@ -48,3 +48,15 @@ def user_logout(request):
     logout(request)
     messages.success(request, 'you logout seccessfully', 'success')
     return redirect('posts:all_posts')
+
+
+def user_dashboard(request, user_id):
+    user = get_object_or_404(User, id = user_id)
+    
+    
+
+
+    context = {
+        'user': user
+    }
+    return render(request, 'usermanage/dashboard.html', context)
