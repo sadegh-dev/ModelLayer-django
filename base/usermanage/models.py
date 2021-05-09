@@ -12,7 +12,7 @@ class Profile(models.Model):
         return f'{self.user.username}'
     
 def save_profile(sender, **kwargs):
-    if kwargs['created'] :
+    if kwargs['created']:
         p1 = Profile( user = kwargs['instance'] )
         p1.save()
 
