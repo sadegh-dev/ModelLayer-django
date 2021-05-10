@@ -8,6 +8,7 @@ from posts.models import Post
 
 
 def user_login(request):
+    next = request.GET.get('next')
     if request.method == 'POST':
         form = UserLoginForm(request.POST)
         if form.is_valid() :
@@ -16,6 +17,8 @@ def user_login(request):
             if user is not None :
                 login(request, user)
                 messages.success(request, 'you logged in successfully', 'success')
+                if next:
+                    return redirect(next)
                 return redirect('posts:all_posts')
             else :
                 messages.error(request, 'wrong username or password', 'error')     
