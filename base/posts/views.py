@@ -10,12 +10,13 @@ from django.utils.text import slugify
 
 
 def all_posts(request):
-    
     posts = Post.objects.all()
     context = {
         'posts' : posts
     }
     return render(request, 'posts/all_posts.html',context)
+
+
 
 def post_detail(request, year, month, day, slug):
 
@@ -23,7 +24,6 @@ def post_detail(request, year, month, day, slug):
     context = {
         'post' : the_post
     }
-
     return render(request,'posts/post_detail.html', context)
 
 

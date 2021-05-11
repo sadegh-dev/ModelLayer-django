@@ -6,6 +6,7 @@
 
 {% block content %}
     {% for post in posts %}
+        <br />
         <div class="card" >
             <p class="card-header" ><a href="{% url 'usermanage:dashboard' post.user.id %}">{{ post.user }}</a></p>
             <p class="card-body" ><a href='{{ post.get_absolute_url }}' >{{ post.body }}</a></p>
