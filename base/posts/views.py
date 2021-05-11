@@ -19,7 +19,6 @@ def all_posts(request):
 
 
 def post_detail(request, year, month, day, slug):
-
     the_post = get_object_or_404( Post, created__year = year, created__month = month, created__day = day, slug = slug )
     context = {
         'post' : the_post
@@ -45,3 +44,14 @@ def add_post(request):
         'form' : form ,
     }
     return render(request, 'posts/add_post.html', context) 
+
+
+
+@login_required
+def delete_post(request, post_id):
+    the_post = get_object_or_404(Post, id = post_id)
+    if request.user.id == the_post.user.id :
+        the_post.delete()
+        messages.success(request, 'the post has deleted successfully', 'success')
+    return redirect('posts:all_posts')
+

@@ -5,6 +5,9 @@
 {% endblock %}
 
 {% block content %}
+    {% if post.user.id == request.user.id %}
+        <a href="{% url 'posts:delete_post' post.id %}">Delete Post</a><br />
+    {% endif %}
     <p>{{ post.user }} |  {{ post.created|date }}</p>
     <p>{{ post.body }}</p>
 {% endblock %}
