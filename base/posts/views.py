@@ -3,7 +3,7 @@ from .models import Post
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import AddPostForm
+from .forms import AddPostForm, EditPostForm
 from django.utils.text import slugify
 
 
@@ -48,10 +48,37 @@ def add_post(request):
 
 
 @login_required
+def edit_post(request, post_id):
+    the_post = get_object_or_404(Post, id = post_id)
+    if the_post.user.id == request.user.id :
+        if request.method == 'POST':
+            form = AddPostForm(request.POST, instance= the_post)
+            if form.is_valid():
+                new_post = form.save(commit=False)
+                new_post.user = request.user
+                new_post.slug = slugify(form.cleaned_data['body'][:30])
+                new_post.save()
+                messages.success(request, 'your post submitted', 'success')
+                return redirect('usermanage:dashboard', request.user.id)
+        else:
+            form = EditPostForm(instance=the_post)
+        context = {
+            'form' : form
+        }
+        return render(request, 'posts/edit_post.html', context)
+    else:
+        return redirect('posts:all_posts')
+
+
+
+@login_required
 def delete_post(request, post_id):
     the_post = get_object_or_404(Post, id = post_id)
     if request.user.id == the_post.user.id :
         the_post.delete()
         messages.success(request, 'the post has deleted successfully', 'success')
     return redirect('posts:all_posts')
+
+
+
 
