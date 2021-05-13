@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404 , redirect
-from .models import Post
+from .models import Post, Comment
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -20,11 +20,17 @@ def all_posts(request):
 
 def post_detail(request, year, month, day, slug):
     the_post = get_object_or_404( Post, created__year = year, created__month = month, created__day = day, slug = slug )
+    #way 1
+    #comments = Comment.objects.filter(post = the_post, is_reply = False)
+    #way 2 - best
+    comments = the_post.postcomments.all()
+
     context = {
-        'post' : the_post
+        'post' : the_post,
+        'comments' : comments
     }
     return render(request,'posts/post_detail.html', context)
-
+ 
 
 
 @login_required
