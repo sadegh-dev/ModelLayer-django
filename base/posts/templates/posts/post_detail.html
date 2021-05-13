@@ -11,11 +11,24 @@
     {% endif %}
     <p>{{ post.user }} |  {{ post.created|date }}</p>
     <p>{{ post.body }}</p>
-
     <hr />
+
 
     <p class='card-header' >number of comments : {{ comments.count }}</p>
     <br />
+
+
+    {% if request.user.is_authenticated %}
+        <form action='' method='POST' novalidate>
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type='submit' value='Send comment' class='btn btn-primary' >
+        </form>
+    {% else %}
+        <p>only logged user can send comment</p>
+    {% endif %}
+    <br />
+
 
     {% for comment in comments %}
         <div class='card bg-dark text-white' >
@@ -24,7 +37,8 @@
         </div>
         <br />
     {% empty %}
-    <p class='card-header' > no comments </p>
+        <p class='card-header' > no comments </p>
     {% endfor %}
+
 
 {% endblock %}

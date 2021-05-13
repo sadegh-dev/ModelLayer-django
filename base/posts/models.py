@@ -14,6 +14,9 @@ class Post (models.Model):
     def get_absolute_url(self):
         return reverse('posts:post_detail', args=[self.created.year, self.created.month, self.created.day, self.slug])
 
+    class Meta :
+        ordering = ('-created',)
+
 
 
 class Comment(models.Model):
@@ -27,8 +30,9 @@ class Comment(models.Model):
     def __str__(self):
         return f'{self.user} - {self.body[:30]}'
 
+    class Meta :
+        ordering = ('-created',)
 
 
-
-
+ 
 

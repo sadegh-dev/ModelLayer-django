@@ -3,7 +3,7 @@ from .models import Post, Comment
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import AddPostForm, EditPostForm
+from .forms import AddPostForm, EditPostForm, AddCommentForm
 from django.utils.text import slugify
 
 
@@ -23,11 +23,23 @@ def post_detail(request, year, month, day, slug):
     #way 1
     #comments = Comment.objects.filter(post = the_post, is_reply = False)
     #way 2 - best
-    comments = the_post.postcomments.all()
+    comments = the_post.postcomments.filter(is_reply = False)
+
+    if request.method == 'POST' :
+        form = AddCommentForm(request.POST)
+        if form.is_valid():
+            newcom = form.save(commit=False)
+            newcom.user = request.user
+            newcom.post = the_post
+            newcom.save()
+            messages.success(request, 'your comment send successfully', 'success')
+    else :
+        form = AddCommentForm()
 
     context = {
         'post' : the_post,
-        'comments' : comments
+        'comments' : comments , 
+        'form' : form
     }
     return render(request,'posts/post_detail.html', context)
  
