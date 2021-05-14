@@ -23,8 +23,6 @@ def post_detail(request, year, month, day, slug):
     #comments = Comment.objects.filter(post = the_post, is_reply = False)
     #way 2 - best
     comments = the_post.postcomments.filter(is_reply = False)
-    reply_form = AddReplyForm()
-
     if request.method == 'POST' :
         form = AddCommentForm(request.POST)
         if form.is_valid():
@@ -33,9 +31,8 @@ def post_detail(request, year, month, day, slug):
             newcom.post = the_post
             newcom.save()
             messages.success(request, 'your comment send successfully', 'success')
-    else :
-        form = AddCommentForm()
-
+    form = AddCommentForm()
+    reply_form = AddReplyForm()
     context = {
         'post' : the_post,
         'comments' : comments , 
@@ -43,7 +40,7 @@ def post_detail(request, year, month, day, slug):
         'reply_form' : reply_form
     }
     return render(request,'posts/post_detail.html', context)
- 
+
 
 
 @login_required

@@ -19,7 +19,7 @@
 
     <!-- Comments Form -->
     {% if request.user.is_authenticated %}
-        <form action='' method='POST' novalidate>
+        <form action='' method='POST'>
             {% csrf_token %}
             {{ form.as_p }}
             <input type='submit' value='Send comment' class='btn btn-primary' >
