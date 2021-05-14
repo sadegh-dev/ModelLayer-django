@@ -33,3 +33,12 @@ class AddCommentForm(forms.ModelForm) :
         help_texts = {
             'body' : 'حداکثر 400 کاراکتر' , 
         }
+
+
+
+class AddReplyForm(forms.ModelForm):
+    class Meta :
+        model = Comment
+        fields = ('body',)
+
+

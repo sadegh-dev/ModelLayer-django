@@ -17,7 +17,7 @@
     <p class='card-header' >number of comments : {{ comments.count }}</p>
     <br />
 
-
+    <!-- Comments Form -->
     {% if request.user.is_authenticated %}
         <form action='' method='POST' novalidate>
             {% csrf_token %}
@@ -29,12 +29,28 @@
     {% endif %}
     <br />
 
-
+    <!-- Show Comments -->
     {% for comment in comments %}
         <div class='card bg-dark text-white' >
             <p class='card-header' >{{ comment.user }}</p>
             <p class='card-body' >{{ comment.body }}</p>
-        </div>
+            <!-- Reply Form -->
+            {% if request.user.is_authenticated %}
+            <div class ='card-body' >
+                <form action='{% url "posts:add_reply" comment.id %}' method='POST' >
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input type='submit' value='Send Reply' class='btn btn-primary' >
+                </form>
+            </div>
+            {% else %}
+                <p>only logged user can send Reply</p>
+            {% endif %}
+            <!-- Replies -->
+            {% for reply in comment.replies.all %}
+                <p class='bg-primary text-white p-3 m-4' >{{ reply.user }} <br /> {{ reply.body }} </p>
+            {% endfor %}
+        </div> 
         <br />
     {% empty %}
         <p class='card-header' > no comments </p>

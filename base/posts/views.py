@@ -3,9 +3,8 @@ from .models import Post, Comment
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import AddPostForm, EditPostForm, AddCommentForm
+from .forms import AddPostForm, EditPostForm, AddCommentForm, AddReplyForm
 from django.utils.text import slugify
-
 
 
 
@@ -24,6 +23,7 @@ def post_detail(request, year, month, day, slug):
     #comments = Comment.objects.filter(post = the_post, is_reply = False)
     #way 2 - best
     comments = the_post.postcomments.filter(is_reply = False)
+    reply_form = AddReplyForm()
 
     if request.method == 'POST' :
         form = AddCommentForm(request.POST)
@@ -39,7 +39,8 @@ def post_detail(request, year, month, day, slug):
     context = {
         'post' : the_post,
         'comments' : comments , 
-        'form' : form
+        'form' : form,
+        'reply_form' : reply_form
     }
     return render(request,'posts/post_detail.html', context)
  
@@ -96,6 +97,22 @@ def delete_post(request, post_id):
         the_post.delete()
         messages.success(request, 'the post has deleted successfully', 'success')
     return redirect('posts:all_posts')
+
+
+@login_required
+def add_reply(request, comment_id ):
+    comment = get_object_or_404(Comment, id = comment_id)
+    if request.method == 'POST':
+        formi = AddReplyForm(request.POST)
+        if formi.is_valid():
+            reply = formi.save(commit=False)
+            reply.user = request.user
+            reply.post = comment.post
+            reply.reply = comment
+            reply.is_reply = True
+            reply.save()
+            messages.success(request, 'the reply submitted susseccfully', 'success')
+    return redirect('posts:post_detail', comment.post.created.year, comment.post.created.month, comment.post.created.day, comment.post.slug )
 
 
 
