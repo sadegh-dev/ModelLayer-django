@@ -1,4 +1,6 @@
 from django import forms
+from .models import Profile
+
 
 email_messages = {
     'required' : 'این فیلد اجباری است' ,
@@ -47,4 +49,10 @@ class UserRegistrationForm(forms.Form):
             'placeholder' : 'password' ,
         })
     )
-    
+
+class EditProfileForm(forms.ModelForm):
+    email = forms.EmailField()
+    class Meta :
+        model = Profile
+        fields = ('bio','age')
+
