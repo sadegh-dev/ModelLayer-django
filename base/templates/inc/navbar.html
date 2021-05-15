@@ -7,6 +7,7 @@
         <a class="nav-link active" aria-current="page" href="{% url 'usermanage:edit_profile' %}">Edit Profile</a>
         <a class="nav-link active" aria-current="page" href="{% url 'usermanage:logout' %}">Logout</a>
         {% else %}
+        <a class="nav-link active" aria-current="page" href="{% url 'usermanage:phone_login' %}">Phone Login</a>
         <a class="nav-link active" aria-current="page" href="{% url 'usermanage:login' %}">Login</a>
         <a class="nav-link active" aria-current="page" href="{% url 'usermanage:register' %}">Register</a>
         {% endif %}

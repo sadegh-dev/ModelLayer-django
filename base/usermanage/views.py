@@ -5,6 +5,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from posts.models import Post
+from .models import Profile
+from random import randint
+
+#pip install kavenegar
+#from kavenegar import *
+
 
 
 
@@ -88,6 +94,55 @@ def edit_profile(request):
     return render(request,'usermanage/edit_profile.html',context)
 
 
+
+def phone_login(request):
+    if request.method == 'POST' :
+        form = PhoneLoginForm(request.POST)
+        if form.is_valid():
+            phone = f'0{form.cleaned_data["phone"]}'
+            rand_num = randint(1000,9999)
+            # kavenegar
+            """
+            api = KavenegarAPI('55555')
+            params = {
+                'sender' : '' ,
+                'receptor' : phone ,
+                'message' : rand_num
+            }
+            api.sms_send(params)
+            """
+            #test and print in Terminal
+            print(rand_num)
+
+            return redirect('usermanage:verify', phone, rand_num )
+    else :
+        form = PhoneLoginForm()
+    context = {
+        'form' : form
+    }
+    return render(request, 'usermanage/phone_login.html', context)
+
+
+
+# Verify Phone Login
+def verify(request, phone, rand_num):
+    if request.method == 'POST' :
+        form = VerifyCodeForm(request.POST)
+        if form.is_valid() :
+            if rand_num == form.cleaned_data['code']:
+                profile = get_object_or_404(Profile, phone= phone)
+                user = get_object_or_404(User, profile = profile)
+                login(request, user)
+                messages.success(request,'logged in successfully', 'success')
+                return redirect('posts:all_posts')
+            else:
+                messages.error(request, 'your code is wrong', 'warning')
+    else : 
+        form = VerifyCodeForm()
+    context = {
+        'form' : form
+    }
+    return render(request, 'usermanage/verify.html', context)
 
 
 
