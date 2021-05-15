@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %} {{ user.username }} Profile {% endblock %}
+
+{% block js_files %}
+<script src="{% static 'js/script.js' %}" ></script> 
+{% endblock %}
+
 
 {% block content %}
     <h4> {{ user.username }} </h4> 
