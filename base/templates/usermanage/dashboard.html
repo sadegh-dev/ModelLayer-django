@@ -15,9 +15,9 @@
     
     <!-- don't show for my panel -->
     {% if request.user.id != user.id and not is_following %}
-        <button id='following-btn' class='btn btn-primary'>follow</button>
+        <button id='following-btn' data-id ='{{ user.id }}' class='btn btn-primary'>follow</button>
     {% elif request.user.id != user.id and is_following %}
-        <button id='following-btn' class='btn btn-warning'>unfollow</button>
+        <button id='following-btn' data-id ='{{ user.id }}' class='btn btn-warning'>unfollow</button>
     {% endif %}
 
     <br /><hr /><br />
