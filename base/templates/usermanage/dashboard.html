@@ -11,7 +11,16 @@
 {% block content %}
     <h4> {{ user.username }} </h4> 
     {{ user.profile.bio }}
-    <hr />
+    <br /><br />
+    
+    <!-- don't show for my panel -->
+    {% if request.user.id != user.id and not is_following %}
+        <button id='following-btn' class='btn btn-primary'>follow</button>
+    {% elif request.user.id != user.id and is_following %}
+        <button id='following-btn' class='btn btn-warning'>unfollow</button>
+    {% endif %}
+
+    <br /><hr /><br />
     {% for post in posts %}
         <div class="card" >
             <p class="card-header" ><a href="{% url 'usermanage:dashboard' post.user.id %}">{{ post.user }}</a></p>

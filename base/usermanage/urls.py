@@ -10,6 +10,8 @@ urlpatterns = [
     path('edit-profile/', views.edit_profile, name='edit_profile'),
     path('phone-login/', views.phone_login, name='phone_login'),
     path('verify/<int:phone>/<int:rand_num>', views.verify, name='verify'),
+    path('follow/', views.follow, name='follow'),
+    path('unfollow/', views.unfollow, name='unfollow'),
 ]
 
 

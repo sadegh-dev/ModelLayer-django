@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from posts.models import Post
-from .models import Profile
+from .models import Profile, Relation
 from random import randint
 
 #pip install kavenegar
@@ -67,9 +67,16 @@ def user_logout(request):
 def user_dashboard(request, user_id):
     user = get_object_or_404(User, id = user_id)
     posts = Post.objects.filter(user = user) 
+
+    is_following = False
+    relation = Relation.objects.filter(from_user = request.user , to_user = user)
+    if relation.exists():
+        is_following = True
+
     context = {
         'user': user ,
-        'posts' : posts
+        'posts' : posts,
+        'is_following' : is_following
     }
     return render(request, 'usermanage/dashboard.html', context)
 
@@ -143,6 +150,18 @@ def verify(request, phone, rand_num):
         'form' : form
     }
     return render(request, 'usermanage/verify.html', context)
+
+
+
+def follow(request):
+    pass
+
+
+
+def unfollow(request):
+    pass
+
+
 
 
 
